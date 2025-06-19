@@ -23,7 +23,7 @@ exports.getUsers = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-// Create a new user
+// Create a new user 
 exports.createUser = async (req, res) => {
     try {
         const user = new User({

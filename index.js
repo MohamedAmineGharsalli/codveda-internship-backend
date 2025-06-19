@@ -1,29 +1,27 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./config/db');
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use('/api/posts', require('./routes/postRoutes'));
 
-
-// MongoDB connection
-const uri = "mongodb://localhost:27017/codveda";
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("Connected to MongoDB"))
-    .catch(err => console.error("MongoDB connection error:", err));
+// Connect to MongoDB
+connectDB();
 
 // Default Route
 app.get('/', (req, res) => {
     res.send('Server is running!');
 });
 
-// ✅ Register API routes BEFORE error handling
+// API Routes
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/posts', require('./routes/postRoutes'));  // <-- Moved up
+app.use('/api/posts', require('./routes/postRoutes'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -31,7 +29,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// ✅ 404 handler should always be LAST
+// 404 handler
 app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' });
 });

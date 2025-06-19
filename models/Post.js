@@ -12,12 +12,11 @@ const postSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Reference to User model
+    ref: 'User', 
     required: true,
   }
 }, { timestamps: true });
 
-// Index for faster user lookup
 postSchema.index({ user: 1 });
 
 module.exports = mongoose.model('Post', postSchema);
